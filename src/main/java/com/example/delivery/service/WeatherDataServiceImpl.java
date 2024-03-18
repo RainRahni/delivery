@@ -39,13 +39,14 @@ public class WeatherDataServiceImpl implements WeatherDataService {
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(inputStream);
 
-        NodeList stationNodes = document.getElementsByTagName("station");
-        saveWeatherData(stationNodes);
+        saveWeatherData(document);
         inputStream.close();
         connection.disconnect();
     }
     @Override
-    public void saveWeatherData(NodeList stationNodes) {
+    public void saveWeatherData(Document document) {
+        String timestamp = document.getDocumentElement().getAttribute("timestamp");
+        NodeList stationNodes = document.getElementsByTagName("station");
         for (int i = 0; i < stationNodes.getLength(); i++) {
             Element stationElement = (Element) stationNodes.item(i);
             String stationName = stationElement.getElementsByTagName("name").item(0).getTextContent();
@@ -59,7 +60,6 @@ public class WeatherDataServiceImpl implements WeatherDataService {
                         .item(0).getTextContent());
                 String phenomenon = stationElement.getElementsByTagName("phenomenon")
                         .item(0).getTextContent();
-                String timestamp = stationElement.getAttribute("timestamp");
                 Station station = new Station(wmoCode, stationName);
                 Weather weather = new Weather(airTemperature, windSpeed, phenomenon, timestamp);
                 WeatherData observation = WeatherData.builder().weather(weather).station(station).build();

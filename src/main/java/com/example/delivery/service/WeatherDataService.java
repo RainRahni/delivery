@@ -1,6 +1,7 @@
 package com.example.delivery.service;
 
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -11,5 +12,5 @@ import java.net.MalformedURLException;
 @Service
 public interface WeatherDataService {
     void requestWeatherData() throws IOException, SAXException, ParserConfigurationException;
-    void saveWeatherData(NodeList stationNodes);
+    void saveWeatherData(Document document);
 }
