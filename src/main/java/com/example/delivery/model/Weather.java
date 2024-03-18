@@ -1,0 +1,21 @@
+package com.example.delivery.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Weather {
+    @Column(name = "air_temp")
+    private double airTemperature;
+    @Column(name = "wind_speed")
+    private double windSpeed;
+    @Column(name = "weather_phenomenon")
+    private String phenomenon;
+    @Column(name = "timestamp")
+    private String timestamp;
+}
