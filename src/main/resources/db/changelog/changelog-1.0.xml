@@ -23,7 +23,7 @@
             <column name="weather_phenomenon" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="timestamp" type="VARCHAR(255)">
+            <column name="timestamp" type="datetime">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -15,7 +15,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class WeatherDataController {
     private final WeatherDataServiceImpl weatherService;
-    @GetMapping("/DATA")
+    @GetMapping("/data")
     public void getData() throws IOException, ParserConfigurationException, SAXException {
         weatherService.requestWeatherData();
     }

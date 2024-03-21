@@ -5,6 +5,7 @@ import com.example.delivery.model.Weather;
 import com.example.delivery.model.WeatherData;
 import com.example.delivery.repository.WeatherDataRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,12 +22,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class WeatherDataServiceImpl implements WeatherDataService {
     private final WeatherDataRepository weatherDataRepository;
     @Override
+    @Scheduled(cron = "${weather.cron.expression:0 15 * * * *}")
     public void requestWeatherData() throws IOException, SAXException, ParserConfigurationException {
         String weatherDataUrl = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
         URL url = new URL(weatherDataUrl);
@@ -46,6 +49,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
     @Override
     public void saveWeatherData(Document document) {
         String timestamp = document.getDocumentElement().getAttribute("timestamp");
+        Date date = new Date(Long.parseLong(timestamp) * 1000L);
         NodeList stationNodes = document.getElementsByTagName("station");
         for (int i = 0; i < stationNodes.getLength(); i++) {
             Element stationElement = (Element) stationNodes.item(i);
@@ -61,10 +65,11 @@ public class WeatherDataServiceImpl implements WeatherDataService {
                 String phenomenon = stationElement.getElementsByTagName("phenomenon")
                         .item(0).getTextContent();
                 Station station = new Station(wmoCode, stationName);
-                Weather weather = new Weather(airTemperature, windSpeed, phenomenon, timestamp);
+                Weather weather = new Weather(airTemperature, windSpeed, phenomenon, date);
                 WeatherData observation = WeatherData.builder().weather(weather).station(station).build();
                 weatherDataRepository.save(observation);
             }
         }
     }
+
 }
