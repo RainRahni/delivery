@@ -71,5 +71,8 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             }
         }
     }
+    public WeatherData getLatestWeatherReport(String city) {
+        return new WeatherData();
+    }
 
 }
