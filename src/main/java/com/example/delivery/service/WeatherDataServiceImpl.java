@@ -71,8 +71,9 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             }
         }
     }
-    public WeatherData getLatestWeatherReport(String city) {
-        return new WeatherData();
+    protected Weather getLatestWeatherReport(String city) {
+        WeatherData latest = weatherDataRepository.findLatestByCity(city);
+        return latest.getWeather();
     }
 
 }

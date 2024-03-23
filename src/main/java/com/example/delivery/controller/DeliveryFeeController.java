@@ -1,6 +1,7 @@
 package com.example.delivery.controller;
 
 import com.example.delivery.exception.BadRequestException;
+import com.example.delivery.service.DeliveryFreeServiceImpl;
 import com.example.delivery.service.WeatherDataService;
 import com.example.delivery.service.WeatherDataServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,36 +17,10 @@ import java.util.Set;
 @RequestMapping("deliveryFee")
 @RequiredArgsConstructor
 public class DeliveryFeeController {
-    private final WeatherDataServiceImpl weatherDataServiceImpl;
+    private final DeliveryFreeServiceImpl deliveryFreeService;
     @GetMapping("/totalFee/{city}/{carType}")
     public double calculateTotalDeliveryFee(@PathVariable("city") String city, @PathVariable("carType") String vehicleType) {
-        validateParameters(city, vehicleType);
-        double regionalBaseFee = getRegionalBaseFee(city, vehicleType);
+        return deliveryFreeService.getDeliveryFee(city, vehicleType);
+    }
 
-        return 32;
-    }
-    private void validateParameters(String city, String vehicleType) {
-        if (!city.equalsIgnoreCase("Tallinn")
-                && !city.equalsIgnoreCase("Tartu")
-                && !city.equalsIgnoreCase("Pärnu")
-                && !vehicleType.equalsIgnoreCase("Car")
-                && !vehicleType.equalsIgnoreCase("Scooter")
-                && !vehicleType.equalsIgnoreCase("Bike")) {
-            throw new BadRequestException("Wrong input!");
-        }
-    }
-    private double getRegionalBaseFee(String city, String vehicleType) {
-        if (city.equalsIgnoreCase("Tallinn")) {
-            return vehicleType.equalsIgnoreCase("Car") ? 4 :
-                    vehicleType.equalsIgnoreCase("Scooter") ? 3.5 : 3;
-        } else if (city.equalsIgnoreCase("Tartu")) {
-            return vehicleType.equalsIgnoreCase("Car") ? 3.5 :
-                    vehicleType.equalsIgnoreCase("Scooter") ? 3 : 2.5;
-        }
-        return vehicleType.equalsIgnoreCase("Car") ? 3 :
-                vehicleType.equalsIgnoreCase("Scooter") ? 2.5 : 2;
-    }
-    private double getExtraFee(String vehicleType) {
-        return 0;
-    }
 }
