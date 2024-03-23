@@ -18,8 +18,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DeliveryFeeController {
     private final DeliveryFreeServiceImpl deliveryFreeService;
-    @GetMapping("/totalFee/{city}/{carType}")
-    public double calculateTotalDeliveryFee(@PathVariable("city") String city, @PathVariable("carType") String vehicleType) {
+    @GetMapping("/totalFee/{city}/{vehicleType}")
+    public double calculateTotalDeliveryFee(@PathVariable("city") String city,
+                                            @PathVariable("vehicleType") String vehicleType) {
         return deliveryFreeService.getDeliveryFee(city, vehicleType);
     }
 
