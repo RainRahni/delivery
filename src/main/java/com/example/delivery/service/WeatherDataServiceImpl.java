@@ -56,7 +56,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             String stationName = stationElement.getElementsByTagName("name").item(0).getTextContent();
             if (stationName.equals("Tallinn-Harku") || stationName.equals("Tartu-Tõravere")
                     || stationName.equals("Pärnu")) {
-                Double airTemperature = Double.parseDouble(stationElement.getElementsByTagName("airtemperature")
+                double airTemperature = Double.parseDouble(stationElement.getElementsByTagName("airtemperature")
                         .item(0).getTextContent());
                 String wmoCode = stationElement.getElementsByTagName("wmocode")
                         .item(0).getTextContent();

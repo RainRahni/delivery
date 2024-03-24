@@ -5,9 +5,6 @@ import com.example.delivery.model.Weather;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Service
 @RequiredArgsConstructor
 public class DeliveryFreeServiceImpl {
@@ -26,12 +23,6 @@ public class DeliveryFreeServiceImpl {
         double extraFee = calculateExtraFee(city, vehicleType);
         return regionalBaseFee + extraFee;
     }
-
-    /**
-     * Validate that given parameters are correct.
-     * @param city which city.
-     * @param vehicleType which type is the vehicle.
-     */
     private void validateParameters(String city, String vehicleType) {
         if (!city.equalsIgnoreCase("Tallinn")
                 && !city.equalsIgnoreCase("Tartu")
@@ -42,14 +33,6 @@ public class DeliveryFreeServiceImpl {
             throw new BadRequestException("Wrong input!");
         }
     }
-
-    /**
-     * Calculate regional base fee based on what is the
-     * given city and which vehicle type is given.
-     * @param city which city.
-     * @param vehicleType which type is the vehicle.
-     * @return regional base fee.
-     */
     private double calculateRegionalBaseFee(String city, String vehicleType) {
         if (city.equalsIgnoreCase("Tallinn")) {
             return vehicleType.equalsIgnoreCase("Car") ? 4 :
@@ -61,14 +44,6 @@ public class DeliveryFreeServiceImpl {
         return vehicleType.equalsIgnoreCase("Car") ? 3 :
                 vehicleType.equalsIgnoreCase("Scooter") ? 2.5 : 2;
     }
-
-    /**
-     * Calculate extra fee based on latest weather report
-     * in given city and vehicle type.
-     * @param city which city.
-     * @param vehicleType which type is the vehicle
-     * @return extra fee.
-     */
     private double calculateExtraFee(String city, String vehicleType) {
         Weather weather = weatherDataService.getLatestWeatherReport(city);
         double atef = 0;
@@ -83,14 +58,8 @@ public class DeliveryFreeServiceImpl {
         }
         return atef + wsef + wpef;
     }
-
-    /**
-     *
-     * @param airTemp
-     * @return
-     */
     private double getAtef(double airTemp) {
-        return  airTemp >= -10 && airTemp <= 0 ? 0.5 : airTemp < -10 ? 1 : 0;
+        return  airTemp > -10 && airTemp < 0 ? 0.5 : airTemp < -10 ? 1 : 0;
     }
     private double getWsef(double windSpeed) {
         if (windSpeed >= 10  && windSpeed <= 20) {
@@ -101,11 +70,14 @@ public class DeliveryFreeServiceImpl {
         return 0;
     }
     private double getWpef(String phenomenon) {
-       if (phenomenon.contains("snow") || phenomenon.contains("sleet")) {
+        if (phenomenon == null) {
+            return 0;
+        }
+        if (phenomenon.toLowerCase().contains("snow") || phenomenon.toLowerCase().contains("sleet")) {
            return 1;
-       } else if (phenomenon.contains("rain")) {
+       } else if (phenomenon.toLowerCase().contains("rain")) {
            return 0.5;
-       } else if (phenomenon.equalsIgnoreCase("glaze")
+       } else if (phenomenon.equalsIgnoreCase("Glaze")
                || phenomenon.equalsIgnoreCase("Hail")
                || phenomenon.equalsIgnoreCase("Thunder")) {
            throw new BadRequestException("Usage of selected vehicle type is forbidden");
