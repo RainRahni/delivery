@@ -5,6 +5,7 @@ import com.example.delivery.model.Weather;
 import com.example.delivery.model.WeatherData;
 import com.example.delivery.repository.WeatherDataRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -20,7 +21,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherDataServiceImpl implements WeatherDataService {
@@ -29,6 +30,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
     @Override
     @Scheduled(cron = "${weather.cron.expression:0 15 * * * *}")
     public void requestWeatherData() throws IOException, SAXException, ParserConfigurationException {
+        log.info("Scheduled method triggered");
         String weatherDataUrl = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
         URL url = new URL(weatherDataUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
