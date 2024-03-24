@@ -15,6 +15,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class WeatherDataController {
     private final WeatherDataServiceImpl weatherService;
+
+    /**
+     * Requests data from Estonia's weather service. Data is
+     * in document form.
+     * @throws IOException if an I/O error occurs.
+     * @throws ParserConfigurationException if a configuration error is encountered during the parsing process.
+     * @throws SAXException if a SAX error is encountered during the XML parsing.
+     */
     @GetMapping("/data")
     public void getData() throws IOException, ParserConfigurationException, SAXException {
         weatherService.requestWeatherData();

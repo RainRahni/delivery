@@ -1,6 +1,7 @@
 package com.example.delivery.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
 import java.util.Date;

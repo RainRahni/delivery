@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DeliveryFreeServiceImpl {
+public class DeliveryFreeServiceImpl implements DeliveryFeeService {
     private final WeatherDataServiceImpl weatherDataService;
 
     /**
