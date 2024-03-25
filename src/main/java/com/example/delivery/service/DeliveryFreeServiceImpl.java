@@ -42,6 +42,7 @@ public class DeliveryFreeServiceImpl implements DeliveryFeeService {
         }
     }
     private double calculateRegionalBaseFee(String city, String vehicleType) {
+
         String lowerCity = city.toLowerCase();
         if (lowerCity.equals("tallinn")) {
             return vehicleType.equalsIgnoreCase("Car") ? 4 :

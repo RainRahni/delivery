@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RuleServiceImpl implements RuleService {
+
+    //TODO: GET RULE BASED ON PARAMETERS
     private final RuleRepository ruleRepository;
     private final String NO_RULE = "No rule with this id exists!";
     @Override
