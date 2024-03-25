@@ -12,12 +12,16 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "rules")
 public class Rule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
     private City city;
+    @Enumerated(EnumType.STRING)
     private Vehicle vehicle;
+    @Enumerated(EnumType.STRING)
     private FeeType feeType;
     private double upperBound;
     private double lowerBound;
