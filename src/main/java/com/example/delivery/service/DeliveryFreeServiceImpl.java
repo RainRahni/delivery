@@ -1,15 +1,27 @@
 package com.example.delivery.service;
 
 import com.example.delivery.exception.BadRequestException;
+import com.example.delivery.model.type.City;
+import com.example.delivery.model.type.Vehicle;
 import com.example.delivery.model.Weather;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class DeliveryFreeServiceImpl implements DeliveryFeeService {
     private final WeatherDataServiceImpl weatherDataService;
-
+    private final List<String> VALID_CITIES = List.of(
+            City.TALLINN.name().toLowerCase(),
+            City.TARTU.name().toLowerCase(),
+            City.PÄRNU.name().toLowerCase());
+    private final List<String> VALID_VEHICLES = List.of(
+            Vehicle.CAR.name().toLowerCase(),
+            Vehicle.SCOOTER.name().toLowerCase(),
+            Vehicle.BIKE.name().toLowerCase()
+    );
     /**
      * Calculate total delivery fee by adding
      * regional base fee and extra fee on business rules.
@@ -24,20 +36,17 @@ public class DeliveryFreeServiceImpl implements DeliveryFeeService {
         return regionalBaseFee + extraFee;
     }
     private void validateParameters(String city, String vehicleType) {
-        if (!city.equalsIgnoreCase("Tallinn")
-                && !city.equalsIgnoreCase("Tartu")
-                && !city.equalsIgnoreCase("Pärnu")
-                && !vehicleType.equalsIgnoreCase("Car")
-                && !vehicleType.equalsIgnoreCase("Scooter")
-                && !vehicleType.equalsIgnoreCase("Bike")) {
+        if (!VALID_CITIES.contains(city.toLowerCase())
+                || !VALID_VEHICLES.contains(vehicleType.toLowerCase())) {
             throw new BadRequestException("Wrong input!");
         }
     }
     private double calculateRegionalBaseFee(String city, String vehicleType) {
-        if (city.equalsIgnoreCase("Tallinn")) {
+        String lowerCity = city.toLowerCase();
+        if (lowerCity.equals("tallinn")) {
             return vehicleType.equalsIgnoreCase("Car") ? 4 :
                     vehicleType.equalsIgnoreCase("Scooter") ? 3.5 : 3;
-        } else if (city.equalsIgnoreCase("Tartu")) {
+        } else if (lowerCity.equals("tartu")) {
             return vehicleType.equalsIgnoreCase("Car") ? 3.5 :
                     vehicleType.equalsIgnoreCase("Scooter") ? 3 : 2.5;
         }

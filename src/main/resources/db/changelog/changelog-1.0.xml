@@ -28,4 +28,23 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="Rain (generated)" author="2">
+        <createTable tableName="rules">
+            <column autoIncrement="true" name="id" startWith="1" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="rule_pkey"/>
+            </column>
+            <column name="city" type="VARCHAR(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vehicle" type="VARCHAR(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fee" type="VARCHAR(55)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="upper_bound" type="DOUBLE"/>
+            <column name="lower_bound" type="DOUBLE"/>
+            <column name="fee" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

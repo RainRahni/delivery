@@ -26,13 +26,14 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class WeatherDataServiceImpl implements WeatherDataService {
     private final WeatherDataRepository weatherDataRepository;
+    private final String WEATHER_DATA_URL = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
+
 
     @Override
     @Scheduled(cron = "${weather.cron.expression:0 15 * * * *}")
     public void requestWeatherData() throws IOException, SAXException, ParserConfigurationException {
         log.info("Scheduled method triggered");
-        String weatherDataUrl = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
-        URL url = new URL(weatherDataUrl);
+        URL url = new URL(WEATHER_DATA_URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
 
@@ -71,7 +72,7 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             }
         }
     }
-    protected Weather getLatestWeatherReport(String city) {
+    public Weather getLatestWeatherReport(String city) {
         WeatherData latest = weatherDataRepository.findLatestByCity(city);
         return latest.getWeather();
     }
