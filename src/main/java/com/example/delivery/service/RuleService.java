@@ -5,5 +5,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RuleService {
-    void addRule(Rule ruleToAdd);
+    void createRule(Rule ruleToAdd);
+
+    void updateRule(Long id, Rule newRule);
+
+    void deleteRule(Long id);
+
+    Rule readRule(Long id);
 }
