@@ -1,9 +1,9 @@
 package com.example.delivery.service;
 
 import com.example.delivery.exception.BadRequestException;
+import com.example.delivery.model.Weather;
 import com.example.delivery.model.type.City;
 import com.example.delivery.model.type.Vehicle;
-import com.example.delivery.model.Weather;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryFreeServiceImpl implements DeliveryFeeService {
     private final WeatherDataServiceImpl weatherDataService;
-    private final List<String> VALID_CITIES = List.of(
+    private static final List<String> VALID_CITIES = List.of(
             City.TALLINN.name().toLowerCase(),
             City.TARTU.name().toLowerCase(),
             City.PÄRNU.name().toLowerCase());
-    private final List<String> VALID_VEHICLES = List.of(
+    private static final List<String> VALID_VEHICLES = List.of(
             Vehicle.CAR.name().toLowerCase(),
             Vehicle.SCOOTER.name().toLowerCase(),
             Vehicle.BIKE.name().toLowerCase()

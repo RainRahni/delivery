@@ -2,6 +2,8 @@ package com.example.delivery.service;
 
 import com.example.delivery.exception.BadRequestException;
 import com.example.delivery.model.Rule;
+import com.example.delivery.model.type.City;
+import com.example.delivery.model.type.Vehicle;
 import com.example.delivery.repository.RuleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,9 @@ public class RuleServiceImpl implements RuleService {
         return ruleRepository
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException(NO_RULE));
+    }
+    public Rule readRuleWithParams(String feeType, City city, Vehicle vehicle, double value) {
+        return readRuleWithParams(feeType, city, vehicle, value);
     }
 
 
