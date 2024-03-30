@@ -34,7 +34,7 @@ public class RuleServiceImpl implements RuleService {
     @Override
     @Transactional
     public void deleteRule(Long id) {
-        Rule ruleToDelete = readRule(id);
+        Rule ruleToDelete = findRuleById(id);
         ruleRepository.delete(ruleToDelete);
     }
 
@@ -42,15 +42,14 @@ public class RuleServiceImpl implements RuleService {
     public Rule readRule(Long id) {
         return findRuleById(id);
     }
-    private Rule findRuleById(Long id) {
+    public Rule findRuleById(Long id) {
         return ruleRepository
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException(NO_RULE));
     }
     public Rule readRuleWithParams(FeeType feeType, City city, Vehicle vehicle,
                                    BigDecimal value, String phenomenon) {
-        Rule specificRule = ruleRepository.findRule(feeType, city, vehicle, value, phenomenon);
-        return specificRule;
+       return ruleRepository.findRule(feeType, city, vehicle, value, phenomenon);
     }
 
 }

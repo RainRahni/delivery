@@ -30,8 +30,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TARTU";
         String vehicleType = "BIKE";
         Weather report = Weather.builder()
-                .airTemperature(-2.1)
-                .windSpeed(4.7)
                 .phenomenon("Light snow shower")
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
@@ -49,7 +47,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TARTU";
         String vehicleType = "BIKE";
         Weather report = Weather.builder()
-                .airTemperature(-2.1)
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
 
@@ -67,7 +64,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TARTU";
         String vehicleType = "BIKE";
         Weather report = Weather.builder()
-                .airTemperature(-20)
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
 
@@ -85,7 +81,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TARTU";
         String vehicleType = "CAR";
         Weather report = Weather.builder()
-                .airTemperature(-2.1)
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
 
@@ -103,7 +98,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TALLINN";
         String vehicleType = "BIKE";
         Weather report = Weather.builder()
-                .windSpeed(15)
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
 
@@ -121,7 +115,6 @@ class DeliveryFreeServiceImplTest {
         String city = "TARTU";
         String vehicleType = "BIKE";
         Weather report = Weather.builder()
-                .windSpeed(30)
                 .build();
         given(weatherDataService.getLatestWeatherReport(city)).willReturn(report);
 

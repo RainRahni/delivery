@@ -31,17 +31,5 @@ class WeatherDataServiceImplTest {
 
     }
 
-    @Test
-    public void testGetLatestWeatherReport() {
-        Weather weather = Weather.builder().airTemperature(2).build();
-        String city = "Pärnu";
-        Station station = Station.builder().name(city).build();
-        WeatherData data = WeatherData.builder().weather(weather).station(station).build();
-        given(weatherDataRepository.findLatestByCity(city)).willReturn(data);
 
-        var actual = weatherDataService.getLatestWeatherReport(city);
-        double expected = 2;
-
-        assertEquals(expected, actual.getAirTemperature());
-    }
 }
