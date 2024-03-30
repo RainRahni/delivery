@@ -6,6 +6,8 @@ import com.example.delivery.model.type.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class Rule {
     private Vehicle vehicle;
     @Enumerated(EnumType.STRING)
     private FeeType feeType;
-    private double upperBound;
-    private double lowerBound;
-    private double fee;
+    private BigDecimal upperBound;
+    private BigDecimal lowerBound;
+    private BigDecimal fee;
 }

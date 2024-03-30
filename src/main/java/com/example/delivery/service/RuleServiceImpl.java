@@ -3,12 +3,15 @@ package com.example.delivery.service;
 import com.example.delivery.exception.BadRequestException;
 import com.example.delivery.model.Rule;
 import com.example.delivery.model.type.City;
+import com.example.delivery.model.type.FeeType;
 import com.example.delivery.model.type.Vehicle;
 import com.example.delivery.repository.RuleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +49,8 @@ public class RuleServiceImpl implements RuleService {
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException(NO_RULE));
     }
-    public Rule readRuleWithParams(String feeType, City city, Vehicle vehicle, double value) {
-        return readRuleWithParams(feeType, city, vehicle, value);
+    public Rule readRuleWithParams(FeeType feeType, City city, Vehicle vehicle, BigDecimal value) {
+        return ruleRepository.findRule(feeType.name(), city.name(), vehicle.name(), value);
     }
 
 

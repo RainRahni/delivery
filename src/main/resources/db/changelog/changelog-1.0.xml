@@ -40,9 +40,9 @@
             <column name="fee_type" type="VARCHAR(55)">
                 <constraints nullable="false"/>
             </column>
-            <column name="upper_bound" type="DOUBLE"/>
-            <column name="lower_bound" type="DOUBLE"/>
-            <column name="fee" type="DOUBLE">
+            <column name="upper_bound" type="DECIMAL"/>
+            <column name="lower_bound" type="DECIMAL"/>
+            <column name="fee" type="DECIMAL">
                 <constraints nullable="false"/>
             </column>
         </createTable>
