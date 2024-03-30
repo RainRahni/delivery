@@ -14,10 +14,10 @@
             <column name="WMO_code" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="air_temp" type="VARCHAR(255)">
+            <column name="air_temp" type="DECIMAL(4, 1)">
                 <constraints nullable="false"/>
             </column>
-            <column name="wind_speed" type="VARCHAR(255)">
+            <column name="wind_speed" type="DECIMAL(3, 2)">
                 <constraints nullable="false"/>
             </column>
             <column name="weather_phenomenon" type="VARCHAR(255)">
@@ -40,9 +40,10 @@
             <column name="fee_type" type="VARCHAR(55)">
                 <constraints nullable="false"/>
             </column>
-            <column name="upper_bound" type="DECIMAL"/>
-            <column name="lower_bound" type="DECIMAL"/>
-            <column name="fee" type="DECIMAL">
+            <column name="phenomenon" type="VARCHAR(255)"/>
+            <column name="upper_bound" type="DECIMAL(4, 1)"/>
+            <column name="lower_bound" type="DECIMAL(4, 1)"/>
+            <column name="fee" type="DECIMAL(3, 2)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

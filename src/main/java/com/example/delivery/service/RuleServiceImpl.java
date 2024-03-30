@@ -16,10 +16,8 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 public class RuleServiceImpl implements RuleService {
-
-    //TODO: GET RULE BASED ON PARAMETERS
     private final RuleRepository ruleRepository;
-    private final String NO_RULE = "No rule with this id exists!";
+    private static final String NO_RULE = "No rule with this id exists!";
     @Override
     @Transactional
     public void createRule(Rule ruleToAdd) {
@@ -49,9 +47,10 @@ public class RuleServiceImpl implements RuleService {
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException(NO_RULE));
     }
-    public Rule readRuleWithParams(FeeType feeType, City city, Vehicle vehicle, BigDecimal value) {
-        return ruleRepository.findRule(feeType.name(), city.name(), vehicle.name(), value);
+    public Rule readRuleWithParams(FeeType feeType, City city, Vehicle vehicle,
+                                   BigDecimal value, String phenomenon) {
+        Rule specificRule = ruleRepository.findRule(feeType, city, vehicle, value, phenomenon);
+        return specificRule;
     }
-
 
 }

@@ -1,97 +1,94 @@
 package com.example.delivery.service;
 
 import com.example.delivery.exception.BadRequestException;
+import com.example.delivery.model.Rule;
 import com.example.delivery.model.Weather;
 import com.example.delivery.model.type.City;
+import com.example.delivery.model.type.FeeType;
 import com.example.delivery.model.type.Vehicle;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DeliveryFreeServiceImpl implements DeliveryFeeService {
     private final WeatherDataServiceImpl weatherDataService;
-    private static final List<String> VALID_CITIES = List.of(
-            City.TALLINN.name().toLowerCase(),
-            City.TARTU.name().toLowerCase(),
-            City.PÄRNU.name().toLowerCase());
-    private static final List<String> VALID_VEHICLES = List.of(
-            Vehicle.CAR.name().toLowerCase(),
-            Vehicle.SCOOTER.name().toLowerCase(),
-            Vehicle.BIKE.name().toLowerCase()
+    private final RuleServiceImpl ruleService;
+    private static final String INVALID_INPUT = "Invalid input!";
+    private static final String VEHICLE_USAGE_FORBIDDEN = "Usage of selected vehicle type is forbidden!";
+    private static final List<City> VALID_CITIES = List.of(
+            City.TALLINN,
+            City.TARTU,
+            City.PÄRNU);
+    private static final List<Vehicle> VALID_VEHICLES = List.of(
+            Vehicle.CAR,
+            Vehicle.SCOOTER,
+            Vehicle.BIKE);
+    private static final List<String> FORBIDDEN_PHENOMENONS = List.of(
+            "GLAZE",
+            "HAIL",
+            "THUNDER"
     );
     /**
      * Calculate total delivery fee by adding
      * regional base fee and extra fee on business rules.
      * @param city which city.
-     * @param vehicleType which type is the vehicle.
+     * @param vehicle which type is the vehicle.
      * @return total delivery fee.
      */
-    public double getDeliveryFee(String city, String vehicleType) {
-        validateParameters(city, vehicleType);
-        double regionalBaseFee = calculateRegionalBaseFee(city, vehicleType);
-        double extraFee = calculateExtraFee(city, vehicleType);
-        return regionalBaseFee + extraFee;
-    }
-    private void validateParameters(String city, String vehicleType) {
-        if (!VALID_CITIES.contains(city.toLowerCase())
-                || !VALID_VEHICLES.contains(vehicleType.toLowerCase())) {
-            throw new BadRequestException("Wrong input!");
-        }
-    }
-    private double calculateRegionalBaseFee(String city, String vehicleType) {
+    public BigDecimal getDeliveryFee(String city, String vehicle) {
+        validateParameters(city, vehicle);
+        City givenCity = City.valueOf(city.toUpperCase());
+        Vehicle givenVehicle = Vehicle.valueOf(vehicle.toUpperCase());
 
-        String lowerCity = city.toLowerCase();
-        if (lowerCity.equals("tallinn")) {
-            return vehicleType.equalsIgnoreCase("Car") ? 4 :
-                    vehicleType.equalsIgnoreCase("Scooter") ? 3.5 : 3;
-        } else if (lowerCity.equals("tartu")) {
-            return vehicleType.equalsIgnoreCase("Car") ? 3.5 :
-                    vehicleType.equalsIgnoreCase("Scooter") ? 3 : 2.5;
-        }
-        return vehicleType.equalsIgnoreCase("Car") ? 3 :
-                vehicleType.equalsIgnoreCase("Scooter") ? 2.5 : 2;
+        BigDecimal regionalBaseFee = calculateRegionalBaseFee(givenCity, givenVehicle);
+        BigDecimal extraFee = calculateExtraFee(city, givenVehicle);
+        return regionalBaseFee.add(extraFee);
     }
-    private double calculateExtraFee(String city, String vehicleType) {
+    private void validateParameters(String city, String vehicle) {
+        if (!VALID_CITIES.contains(City.valueOf(city.toUpperCase()))
+                || !VALID_VEHICLES.contains(Vehicle.valueOf(vehicle.toUpperCase()))) {
+            throw new BadRequestException(INVALID_INPUT);
+        }
+    }
+    private BigDecimal calculateRegionalBaseFee(City city, Vehicle vehicle) {
+        Rule specificRule = ruleService
+                .readRuleWithParams(FeeType.RBF, city, vehicle, null, null);
+        return specificRule.getFee();
+    }
+    private BigDecimal calculateExtraFee(String city, Vehicle vehicle) {
         Weather weather = weatherDataService.getLatestWeatherReport(city);
-        double atef = 0;
-        double wsef = 0;
-        double wpef = 0;
-        if (vehicleType.equalsIgnoreCase("Scooter") || vehicleType.equalsIgnoreCase("Bike")) {
-            atef = getAtef(weather.getAirTemperature());
-            wpef = getWpef(weather.getPhenomenon());
-        }
-        if (vehicleType.equalsIgnoreCase("Bike")) {
-            wsef = getWsef(weather.getWindSpeed());
-        }
-        return atef + wsef + wpef;
+        City givenCity = City.valueOf(city);
+        BigDecimal atef = getAtef(weather.getAirTemperature(), givenCity, vehicle);
+        BigDecimal wsef = getWsef(weather.getWindSpeed(), givenCity, vehicle);
+        BigDecimal wpef = getWpef(weather.getPhenomenon(), givenCity, vehicle);
+        return atef.add(wpef).add(wsef);
     }
-    private double getAtef(double airTemp) {
-        return  airTemp > -10 && airTemp < 0 ? 0.5 : airTemp < -10 ? 1 : 0;
+    private BigDecimal getAtef(BigDecimal airTemp, City city, Vehicle vehicle) {
+        Rule rule = ruleService
+                .readRuleWithParams(FeeType.ATEF, city, vehicle, airTemp, null);
+        return rule == null ? BigDecimal.ZERO : rule.getFee();
     }
-    private double getWsef(double windSpeed) {
-        if (windSpeed >= 10  && windSpeed <= 20) {
-            return 0.5;
-        } else if (windSpeed > 20) {
-            throw new BadRequestException("Usage of selected vehicle type is forbidden");
+    private BigDecimal getWsef(BigDecimal windSpeed, City city, Vehicle vehicle) {
+        if (windSpeed.compareTo(BigDecimal.valueOf(20)) > 0) {
+            throw new BadRequestException(VEHICLE_USAGE_FORBIDDEN);
         }
-        return 0;
+        Rule specificRule = ruleService
+                .readRuleWithParams(FeeType.WSEF, city, vehicle, windSpeed, null);
+        return specificRule == null ? BigDecimal.ZERO : specificRule.getFee();
     }
-    private double getWpef(String phenomenon) {
-        if (phenomenon == null) {
-            return 0;
+    private BigDecimal getWpef(String phenomenon, City city, Vehicle vehicle) {
+        if (phenomenon == null || phenomenon.isEmpty()) {
+            return BigDecimal.ZERO;
         }
-        if (phenomenon.toLowerCase().contains("snow") || phenomenon.toLowerCase().contains("sleet")) {
-           return 1;
-       } else if (phenomenon.toLowerCase().contains("rain")) {
-           return 0.5;
-       } else if (phenomenon.equalsIgnoreCase("Glaze")
-               || phenomenon.equalsIgnoreCase("Hail")
-               || phenomenon.equalsIgnoreCase("Thunder")) {
-           throw new BadRequestException("Usage of selected vehicle type is forbidden");
-       }
-       return 0;
+        if (FORBIDDEN_PHENOMENONS.contains(phenomenon.toUpperCase())) {
+            throw new BadRequestException(VEHICLE_USAGE_FORBIDDEN);
+        }
+        Rule rule = ruleService.readRuleWithParams(FeeType.WPEF, city, vehicle, null, phenomenon);
+        return rule == null ? BigDecimal.ZERO : rule.getFee();
     }
 }

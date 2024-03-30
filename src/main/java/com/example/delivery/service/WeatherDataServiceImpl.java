@@ -18,6 +18,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class WeatherDataServiceImpl implements WeatherDataService {
     private final WeatherDataRepository weatherDataRepository;
-    private final String WEATHER_DATA_URL = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
+    private static final String WEATHER_DATA_URL = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
 
     @Override
@@ -57,11 +58,11 @@ public class WeatherDataServiceImpl implements WeatherDataService {
             String stationName = stationElement.getElementsByTagName("name").item(0).getTextContent();
             if (stationName.equals("Tallinn-Harku") || stationName.equals("Tartu-Tõravere")
                     || stationName.equals("Pärnu")) {
-                double airTemperature = Double.parseDouble(stationElement.getElementsByTagName("airtemperature")
+                BigDecimal airTemperature = new BigDecimal(stationElement.getElementsByTagName("airtemperature")
                         .item(0).getTextContent());
                 String wmoCode = stationElement.getElementsByTagName("wmocode")
                         .item(0).getTextContent();
-                double windSpeed = Double.parseDouble(stationElement.getElementsByTagName("windspeed")
+                BigDecimal windSpeed = new BigDecimal(stationElement.getElementsByTagName("windspeed")
                         .item(0).getTextContent());
                 String phenomenon = stationElement.getElementsByTagName("phenomenon")
                         .item(0).getTextContent();

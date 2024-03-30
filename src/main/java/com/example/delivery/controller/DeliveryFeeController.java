@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("deliveryFee")
 @RequiredArgsConstructor
@@ -18,13 +20,13 @@ public class DeliveryFeeController {
      * city, delivery is the sum of regular base fee and extra fee
      * based on weather conditions.
      * @param city given city.
-     * @param vehicleType given vehicle.
+     * @param vehicle given vehicle.
      * @return total delivery fee.
      */
     @GetMapping("/totalFee/{city}/{vehicleType}")
-    public double calculateTotalDeliveryFee(@PathVariable("city") String city,
-                                            @PathVariable("vehicleType") String vehicleType) {
-        return deliveryFreeService.getDeliveryFee(city, vehicleType);
+    public BigDecimal calculateTotalDeliveryFee(@PathVariable("city") String city,
+                                                @PathVariable("vehicleType") String vehicle) {
+        return deliveryFreeService.getDeliveryFee(city, vehicle);
     }
 
 }

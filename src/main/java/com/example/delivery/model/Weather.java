@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Embeddable
@@ -14,9 +15,9 @@ import java.util.Date;
 @Builder
 public class Weather {
     @Column(name = "air_temp")
-    private double airTemperature;
+    private BigDecimal airTemperature;
     @Column(name = "wind_speed")
-    private double windSpeed;
+    private BigDecimal windSpeed;
     @Column(name = "weather_phenomenon")
     private String phenomenon;
     @Column(name = "timestamp")

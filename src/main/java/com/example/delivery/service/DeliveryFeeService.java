@@ -2,7 +2,9 @@ package com.example.delivery.service;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public interface DeliveryFeeService {
-    double getDeliveryFee(String city, String vehicleType);
+    BigDecimal getDeliveryFee(String city, String vehicleType);
 }

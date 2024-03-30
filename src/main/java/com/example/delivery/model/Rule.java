@@ -25,6 +25,7 @@ public class Rule {
     private Vehicle vehicle;
     @Enumerated(EnumType.STRING)
     private FeeType feeType;
+    private String phenomenon;
     private BigDecimal upperBound;
     private BigDecimal lowerBound;
     private BigDecimal fee;
