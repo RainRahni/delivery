@@ -14,15 +14,9 @@
             <column name="WMO_code" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="air_temp" type="DECIMAL(4, 1)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="wind_speed" type="DECIMAL(3, 2)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="weather_phenomenon" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="air_temp" type="DECIMAL(4, 1)"/>
+            <column name="wind_speed" type="DECIMAL(3, 2)"/>
+            <column name="weather_phenomenon" type="VARCHAR(255)"/>
             <column name="timestamp" type="datetime">
                 <constraints nullable="false"/>
             </column>

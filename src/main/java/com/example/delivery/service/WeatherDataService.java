@@ -10,5 +10,4 @@ import java.io.IOException;
 @Service
 public interface WeatherDataService {
     void requestWeatherData() throws IOException, SAXException, ParserConfigurationException;
-    void saveWeatherData(Document document);
 }
