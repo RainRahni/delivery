@@ -18,8 +18,11 @@ Java version 21 or later
 To run the application, follow these steps:
 
 Clone this repository.
+
 Navigate to the project directory.
+
 Build the project (this will also download the necessary dependencies) .gradlew build
+
 Run the application ./gradlew bootrun
 
 I implemented rule system through CRUD. 
