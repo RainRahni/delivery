@@ -18,7 +18,7 @@ public class WeatherDataController {
 
     /**
      * Requests data from Estonia's weather service. Data is
-     * in document form.
+     * in XML.
      * @throws IOException if an I/O error occurs.
      * @throws ParserConfigurationException if a configuration error is encountered during the parsing process.
      * @throws SAXException if a SAX error is encountered during the XML parsing.

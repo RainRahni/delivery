@@ -30,7 +30,12 @@ public class WeatherDataServiceImpl implements WeatherDataService {
     private static final String WEATHER_DATA_URL
             = "https://www.ilmateenistus.ee/ilma_andmed/xml/observations.php";
 
-
+    /**
+     *
+     * @throws IOException if an input or output exception occurred.
+     * @throws SAXException if any parse errors occur.
+     * @throws ParserConfigurationException if a configuration error occurred.
+     */
     @Override
     @Scheduled(cron = "${weather.cron.expression:0 15 * * * *}")
     public void requestWeatherData() throws IOException, SAXException, ParserConfigurationException {
@@ -45,6 +50,12 @@ public class WeatherDataServiceImpl implements WeatherDataService {
 
         saxParser.parse(new InputSource(url.openStream()), weatherDataHandler);
     }
+
+    /**
+     * Get latest weather report in the given city.
+     * @param city of which weather report to get.
+     * @return latest weather report.
+     */
     public Weather getLatestWeatherReport(String city) {
         WeatherData latest = weatherDataRepository.findLatestByCity(city);
         return latest.getWeather();
