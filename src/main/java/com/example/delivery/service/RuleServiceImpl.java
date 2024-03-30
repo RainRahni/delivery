@@ -7,6 +7,7 @@ import com.example.delivery.model.type.FeeType;
 import com.example.delivery.model.type.Vehicle;
 import com.example.delivery.repository.RuleRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,18 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class RuleServiceImpl implements RuleService {
     private final RuleRepository ruleRepository;
-    private static final String NO_RULE = "No rule with this id exists!";
+    private static final String NO_RULE = "No rule exists!";
+    private static final String INVALID_INPUT = "Invalid Input!";
     @Override
     @Transactional
     public void createRule(Rule ruleToAdd) {
+        validateParameters(ruleToAdd);
         ruleRepository.save(ruleToAdd);
+    }
+    private void validateParameters(Rule ruleToValidate) {
+        if (ruleToValidate.getFee() == null || ruleToValidate.getFeeType() == null) {
+            throw new BadRequestException(INVALID_INPUT);
+        }
     }
     @Override
     @Transactional
@@ -30,7 +38,6 @@ public class RuleServiceImpl implements RuleService {
         BeanUtils.copyProperties(updatedRule, existingRule, "id");
         ruleRepository.save(existingRule);
     }
-
     @Override
     @Transactional
     public void deleteRule(Long id) {
@@ -42,7 +49,7 @@ public class RuleServiceImpl implements RuleService {
     public Rule readRule(Long id) {
         return findRuleById(id);
     }
-    public Rule findRuleById(Long id) {
+    private Rule findRuleById(Long id) {
         return ruleRepository
                 .findById(id)
                 .orElseThrow(() -> new BadRequestException(NO_RULE));
