@@ -20,14 +20,14 @@ public class DeliveryFreeServiceImpl implements DeliveryFeeService {
     private final RuleServiceImpl ruleService;
     private static final String INVALID_INPUT = "Invalid input!";
     private static final String VEHICLE_USAGE_FORBIDDEN = "Usage of selected vehicle type is forbidden!";
-    private static final List<City> VALID_CITIES = List.of(
-            City.TALLINN,
-            City.TARTU,
-            City.PÄRNU);
-    private static final List<Vehicle> VALID_VEHICLES = List.of(
-            Vehicle.CAR,
-            Vehicle.SCOOTER,
-            Vehicle.BIKE);
+    private static final List<String> VALID_CITIES = List.of(
+            City.TALLINN.name(),
+            City.TARTU.name(),
+            City.PÄRNU.name());
+    private static final List<String> VALID_VEHICLES = List.of(
+            Vehicle.CAR.name(),
+            Vehicle.SCOOTER.name(),
+            Vehicle.BIKE.name());
     private static final List<String> FORBIDDEN_PHENOMENONS = List.of(
             "GLAZE",
             "HAIL",
@@ -50,8 +50,8 @@ public class DeliveryFreeServiceImpl implements DeliveryFeeService {
         return regionalBaseFee.add(extraFee);
     }
     private void validateParameters(String city, String vehicle) {
-        if (!VALID_CITIES.contains(City.valueOf(city.toUpperCase()))
-                || !VALID_VEHICLES.contains(Vehicle.valueOf(vehicle.toUpperCase()))) {
+        if (!VALID_CITIES.contains((city.toUpperCase()))
+                || !VALID_VEHICLES.contains(vehicle.toUpperCase())) {
             throw new BadRequestException(INVALID_INPUT);
         }
     }
@@ -74,6 +74,9 @@ public class DeliveryFreeServiceImpl implements DeliveryFeeService {
         return rule == null ? BigDecimal.ZERO : rule.getFee();
     }
     private BigDecimal getWsef(BigDecimal windSpeed, City city, Vehicle vehicle) {
+        if (windSpeed == null) {
+            return BigDecimal.ZERO;
+        }
         if (windSpeed.compareTo(BigDecimal.valueOf(20)) > 0) {
             throw new BadRequestException(VEHICLE_USAGE_FORBIDDEN);
         }

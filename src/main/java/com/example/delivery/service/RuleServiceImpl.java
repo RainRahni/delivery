@@ -7,7 +7,6 @@ import com.example.delivery.model.type.FeeType;
 import com.example.delivery.model.type.Vehicle;
 import com.example.delivery.repository.RuleRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

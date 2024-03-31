@@ -6,7 +6,7 @@ import com.example.delivery.model.WeatherData;
 import com.example.delivery.repository.WeatherDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.dialect.function.array.H2ArrayContainsFunction;
+import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class WeatherDataHandler extends DefaultHandler {
     private final WeatherDataRepository weatherDataRepository;
     private String tempVal;
@@ -59,7 +60,6 @@ public class WeatherDataHandler extends DefaultHandler {
                     break;
                 case "windspeed":
                     if (tempVal != null && !tempVal.isEmpty()) {
-                        log.info(tempVal);
                         tempWeather.setWindSpeed(new BigDecimal(tempVal));
                     } else  {
                         tempWeather.setWindSpeed(null);

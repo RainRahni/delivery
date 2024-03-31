@@ -1,7 +1,6 @@
 package com.example.delivery.service;
 
 import com.example.delivery.handler.WeatherDataHandler;
-import com.example.delivery.model.Station;
 import com.example.delivery.model.Weather;
 import com.example.delivery.model.WeatherData;
 import com.example.delivery.repository.WeatherDataRepository;
@@ -9,19 +8,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,14 +38,12 @@ public class WeatherDataServiceImpl implements WeatherDataService {
         URL url = new URL(WEATHER_DATA_URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         WeatherDataHandler weatherDataHandler = new WeatherDataHandler(weatherDataRepository);
 
         saxParser.parse(new InputSource(url.openStream()), weatherDataHandler);
     }
-
     /**
      * Get latest weather report in the given city.
      * @param city of which weather report to get.
